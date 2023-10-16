@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
-import { PieChart, Pie } from 'recharts';
+import { PieChart, Pie,Label } from 'recharts';
 import { RiSettingsLine } from 'react-icons/ri';
 import { BiSolidDashboard, BiSolidOffer, BiSearch } from 'react-icons/bi';
 import { HiCube } from 'react-icons/hi';
@@ -31,6 +31,8 @@ function App() {
     { title: 'Total', icon: <BsBag className="card-icon" />, money: '$89k', arrow: <AiOutlineArrowUp />, text: '11% this week' },
   ];
 
+  
+
   const gridData = [
     {imgUrl:"https://res.cloudinary.com/dxx7ni6cl/image/upload/c_thumb,w_200,g_face/v1697467011/mascot-logo-design_fb-img_1200x800_joec7n.jpg",head:"Abstarch 3D",para:"it is view that show structurre in 3d",stock:"32 in stock",price:"$ 45.99",sales:"20"},
     {imgUrl:"https://res.cloudinary.com/dxx7ni6cl/image/upload/c_thumb,w_200,g_face/v1697467010/istockphoto-682485942-612x612_g0sbhi.jpg",head:"Abstarch 3D",para:"it is view that show structurre in 3d",stock:"32 in stock",price:"$ 45.99",sales:"20"}
@@ -51,13 +53,14 @@ function App() {
     { month: 'Dec', value: 350 },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
-
-  const barData = [
-    { count: 809680, language: 'Telugu',innerRadius:"30%",outerRadius:"90%" },
-    { count: 4555697, language: 'Hindi',innerRadius:"40%",outerRadius:"70%"  },
-    { count: 12345657, language: 'English',innerRadius:"30%",outerRadius:"80%"  },
+  const dataa = [
+    { name: 'A', value: 20, width: 60, startAngle: 90, endAngle: 35 },
+    { name: 'B', value: 20, width: 20, startAngle: 90, endAngle: 200 },
+    { name: 'C', value: 35, width: 35, startAngle: 200, endAngle: 395 },
+    // Add more data points with customized widths and angles
   ];
+  
+  const COLORS = ['#AF69EE', '#82ca9d', '#ffc658'];
 
   const sideBar = () => (
     <div className={`side-bar ${status ? '' : 'collapsed'}`}>
@@ -97,6 +100,11 @@ function App() {
       )}
     </div>
   );
+
+  const customTickStyle = {
+    stroke: 'white', // Change the color to the desired color
+  };
+
 
   return (
     <>
@@ -145,7 +153,7 @@ function App() {
                 </div>
                 <BarChart width={600} height={300} data={data}>
                   <CartesianGrid vertical={false} horizontal={false} />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="month" axisLine={customTickStyle} tickLine={customTickStyle}/>
                   <Tooltip cursor={{ fill: 'transparent' }} />
                   <Bar dataKey="value" fill="#8884d8" barSize={30} radius={5} />
                 </BarChart>
@@ -156,22 +164,28 @@ function App() {
                 <h4>Customers</h4>
                 <p className='p2'>Customers that buy products</p>
               </div>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={400}>
                 <PieChart>
-                  <Pie
-                    cx="50%"
-                    cy="50%"
-                    data={barData}
-                    startAngle={0}
-                    endAngle={360}
-                    // innerRadius={barData.innerRadius}
-                    // outerRadius={barData.innerRadius}
-                    dataKey="count"
-                  >
-                    {barData.map((entry, index) => (
-                      <Cell key={entry.language} outerRadius={entry.innerRadius} innerRadius={entry.innerRadius}  name={entry.language} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+                  {dataa.map((entry, index) => (
+                    <Pie
+                      data={[entry]}
+                      dataKey="value"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={`${(100 - entry.width) / 2}%`}
+                      outerRadius={`${(100 + entry.width) / 2}%`}
+                      startAngle={entry.startAngle}
+                      endAngle={entry.endAngle}
+                      key={entry.name}
+                    >
+                      <Cell fill={COLORS[index % COLORS.length]} />
+                      <Label
+                        value="Center Label"
+                        position="center"
+                        content={renderCustomLabel}
+                      />
+                    </Pie>
+                  ))}
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -212,7 +226,7 @@ function App() {
                     <div className='row-head'>
                       <p className='p2 g2'>{item.stock}</p>
                       <p className='p2 g2'>{item.price}</p>
-                      <p className=  'p2 g2'>{item.sales}</p>
+                      <p className= 'p2 g2'>{item.sales}</p>
                     </div>
                   </div>
               </div>
@@ -225,4 +239,27 @@ function App() {
   );
 }
 
+
+const renderCustomLabel = (props) => {
+  return (
+    <text x = "50%" y = "50%" textAnchor="middle" fontSize="18" fontWeight="bold">
+      65%
+      <tspan x="50%" style={{fontWeight:"normal",fontSize:"15px"}} dy="1.2em">New</tspan>
+      <tspan x="50%" style={{fontWeight:"normal",fontSize:"15px"}} dy="1.2em">Customers</tspan>
+    </text>
+  );
+};
+
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
